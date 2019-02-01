@@ -35,38 +35,46 @@ public:
 	static int GetWindowWidth();
 	static int GetWindowHeight();
 
+	bool Running() { return m_bRunning; }
+
+	void Quit() { m_bRunning = false; }
+
 private:
 	static CApp* s_pInstance;
 	CApp() {}
 
-	bool Running = true;
+	bool m_bRunning = true;
 
 	SDL_Window* Window = NULL;
 	SDL_Renderer* Renderer = NULL;
 	SDL_Surface* PrimarySurface = NULL;
 
-	//static const int WindowWidth = 512;  //clw note：这里作者把窗口大小写成静态常量成员
+	//static const int WindowWidth = 512;  //clw note：写成静态常量成员，不如在一个.h头文件中define
 	//static const int WindowHeight = 384;
 
 	Texture* TestTexture;
 
 	CEntity Entity1;
 	CEntity Entity2;
+	Texture myTexture;
 
 	// Capture SDL Events
-	void OnEvent(SDL_Event* Event);
+	void HandleEvents();
 
 	// Initialize our SDL game / app
 	bool Init();
 
-	// Logic loop
-	void Loop();
+	// Update made by clw
+	void Update();
 
 	// Render loop (draw)
 	void Render();
 
+
 	// Free up resources
 	void Cleanup();
+
+
 };
 
 

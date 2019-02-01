@@ -61,39 +61,38 @@ bool Texture::Load(SDL_Renderer* Renderer, std::string Filename)
 }
 
 //------------------------------------------------------------------------------
-void Texture::Render(int X, int Y) 
+void Texture::Render(int X, int Y, SDL_RendererFlip flip)
 {
-	Render(X, Y, Width, Height);
+	Render(X, Y, Width, Height, flip);
 }
 
 //------------------------------------------------------------------------------
-void Texture::Render(int X, int Y, int Width, int Height) 
+void Texture::Render(int X, int Y, int Width, int Height, SDL_RendererFlip flip)
 {
 	SDL_Rect Destination = {X, Y, Width, Height};
 
-	SDL_RenderCopy(Renderer, SDLTexture, NULL, &Destination);
+	SDL_RenderCopyEx(Renderer, SDLTexture, NULL, &Destination, 0, 0, flip);
 }
 
 //------------------------------------------------------------------------------
-void Texture::Render(int X, int Y, int Width, int Height, int SX, int SY, int SWidth, int SHeight) 
+void Texture::Render(int X, int Y, int Width, int Height, int SX, int SY, int SWidth, int SHeight, SDL_RendererFlip flip)
 {
 	SDL_Rect Source = {SX, SY, SWidth, SHeight};
 	SDL_Rect Destination = {X, Y, Width, Height};
 
-	SDL_RenderCopy(Renderer, SDLTexture, &Source, &Destination);
+	SDL_RenderCopyEx(Renderer, SDLTexture, &Source, &Destination, 0, 0, flip);
 }
 
-//------------------------------------------------------------------------------
-void Texture::Render(int X, int Y, int SX, int SY, int SWidth, int SHeight)
+void Texture::RenderEx(int X, int Y, int SX, int SY, int SWidth, int SHeight, double _angle, const SDL_Point* _alpha, SDL_RendererFlip flip )
 {
 	SDL_Rect Source = { SX, SY, SWidth, SHeight };
 	SDL_Rect Destination;
 	Destination.x = X;
 	Destination.y = Y;
-	Destination.w = SWidth;  //clw note：这个地方必须得给值，否则就是默认值0，因此屏幕上就什么也没有！！！
+	Destination.w = SWidth;  //clw note：注意：这个地方必须得给值，否则就是默认值0，因此屏幕上就什么也没有！！！
 	Destination.h = SHeight;
 
-	SDL_RenderCopy(Renderer, SDLTexture, &Source, &Destination);
+	SDL_RenderCopyEx(Renderer, SDLTexture, &Source, &Destination, _angle, 0, flip);
 }
 
 

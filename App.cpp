@@ -10,12 +10,50 @@
 #include "CArea.h"
 #include "CCamera.h"
 
+#include "InputHandler.h"
+
+const int FPS = 60;
+const int DELAY_TIME = 1000.0f / FPS;
+
 //==============================================================================
 CApp* CApp::s_pInstance = NULL;
 
 //------------------------------------------------------------------------------
-void CApp::OnEvent(SDL_Event* Event) 
+int CApp::Execute(int argc, char* argv[])
 {
+	Uint32 frameStart, frameTime;
+
+	if (!Init())
+	{
+		Log("clw：Unable to Init SDL: %s", SDL_GetError());
+		return -1;
+	}
+		
+	while (Running())
+	{
+		frameStart = SDL_GetTicks();
+
+		HandleEvents();
+		Update();
+		Render();	
+
+		frameTime = SDL_GetTicks() - frameStart;
+		if (frameTime < DELAY_TIME)
+		{
+			SDL_Delay((int)(DELAY_TIME - frameTime));
+		}
+	}
+
+	Log("clw：game closing...\n");
+	Cleanup();
+	return 0;
+}
+
+
+//------------------------------------------------------------------------------
+void CApp::HandleEvents() 
+{
+	TheInputHandler::Instance()->update();
 }
 
 //------------------------------------------------------------------------------
@@ -63,14 +101,24 @@ bool CApp::Init()
 		Log("Unable to init TextureBank");
 		return false;
 	}
+
+	/*********************************************************/
+	/* clw modify 20190201:加两个sprite */
 	if (Entity1.OnLoad("./entity1.bmp", 64, 64, 8) == false)
 		return false;
 	if (Entity2.OnLoad("./entity2.bmp", 64, 64, 8) == false)
 		return false;
-	Entity2.X = 100;
+	if (myTexture.Load(CApp::GetInstance()->GetRenderer(), "./3.png") == false)
+		return false;
+	
+	Entity1.X = WWIDTH / 2 - 40;
+	Entity1.Y = (WHEIGHT - 64) / 2;
+	Entity2.X = WWIDTH / 2 + 40;
+	Entity2.Y = (WHEIGHT - 64) / 2;
 
 	CEntity::EntityList.push_back(&Entity1);
 	CEntity::EntityList.push_back(&Entity2);
+	/*********************************************************/
 
 	if (CArea::AreaControl.OnLoad("./maps/1.area") == false) 
 	{
@@ -81,57 +129,46 @@ bool CApp::Init()
 }
 
 //------------------------------------------------------------------------------
-void CApp::Loop() 
-{
-	for (int i = 0; i < CEntity::EntityList.size(); i++) 
-	{
-		if (!CEntity::EntityList[i]) 
-			continue;
-		CEntity::EntityList[i]->OnLoop();
-	}
-}
-
-//------------------------------------------------------------------------------
 void CApp::Render() 
 {
 	SDL_RenderClear(Renderer);
 
-	//Texture* pMyTexture = TextureBank::Get("1"); 
-	// You should really check your pointers 
-	// 自注：Get的参数ID一定要在TexList中有才可以
+	//Texture* pMyTexture = TextureBank::Get("1");  
+	// 自注：Get的参数ID一定要在TexList中有才可以，should really check your pointers
 
 
-	//if(pMyTexture != NULL)
-		//pMyTexture->Render((GetWindowWidth() - pMyTexture->GetWidth()) / 2, (GetWindowHeight() - pMyTexture->GetHeight()) / 2); 
 
+	//CArea::AreaControl.OnRender(CCamera::CameraControl.GetX(), CCamera::CameraControl.GetY());
 
-	//Texture* pMyTexture = TextureBank::Get("yoshi2");
-	//if (pMyTexture != NULL)
-		//pMyTexture->Render((GetWindowWidth() - pMyTexture->GetWidth()) / 2, \
-		                   (GetWindowHeight() - pMyTexture->GetWidth()) / 2, \
-			                pMyTexture->GetWidth(), \
-			pMyTexture->GetWidth(), \
-			                0, \
-			                Anim_Yoshi.GetCurrentFrame() * pMyTexture->GetWidth(), \
-			                pMyTexture->GetWidth(), \
-			                pMyTexture->GetWidth());
+	myTexture.Render(CCamera::CameraControl.GetX(), CCamera::CameraControl.GetY());
 
-
-	for (int i = 0; i < CEntity::EntityList.size(); i++) 
+	for (int i = 0; i < CEntity::EntityList.size(); i++)
 	{
-		if (!CEntity::EntityList[i]) 
+		if (!CEntity::EntityList[i])
 			continue;
 		CEntity::EntityList[i]->OnRender();
 	}
 
-	CArea::AreaControl.OnRender(CCamera::CameraControl.GetX(), CCamera::CameraControl.GetY());
-
 	SDL_RenderPresent(Renderer);
+}
+
+// Update made by clw
+void CApp::Update()
+{
+	for (int i = 0; i < CEntity::EntityList.size(); i++)
+	{
+		if (!CEntity::EntityList[i])
+			continue;
+		CEntity::EntityList[i]->Update();
+	}
+
+	CCamera::CameraControl.Update();
 }
 
 //------------------------------------------------------------------------------
 void CApp::Cleanup() 
 {
+
 	for (int i = 0; i < CEntity::EntityList.size(); i++) 
 	{
 		if (!CEntity::EntityList[i]) 
@@ -139,6 +176,7 @@ void CApp::Cleanup()
 		CEntity::EntityList[i]->OnCleanup();
 	}
 	CEntity::EntityList.clear();
+
 
 	CArea::AreaControl.OnCleanup();
 
@@ -160,61 +198,6 @@ void CApp::Cleanup()
 	SDL_Quit();
 }
 
-//------------------------------------------------------------------------------
-int CApp::Execute(int argc, char* argv[]) 
-{
-	if(!Init()) 
-		return 0;
-
-	SDL_Event Event;
-	
-	while(Running) 
-	{
-		while(SDL_PollEvent(&Event) != 0) 
-		{
-			OnEvent(&Event);
-
-			if(Event.type == SDL_QUIT) 
-				Running = false;
-
-			//User presses a key
-			else if (Event.type == SDL_KEYDOWN  /* && Event.key.repeat == 0*/)
-			{
-				//Select surfaces based on key press
-				switch (Event.key.keysym.sym)
-				{
-				case SDLK_UP:
-					CCamera::CameraControl.OnMove(0, 15);   //clw note:原为OnMove(0, 5)
-					break;
-
-				case SDLK_DOWN:
-					CCamera::CameraControl.OnMove(0, -15);
-					break;
-
-				case SDLK_LEFT:
-					CCamera::CameraControl.OnMove(15, 0);
-					break;
-
-				case SDLK_RIGHT:
-					CCamera::CameraControl.OnMove(-15, 0); 
-					break;
-
-				default:
-					break;
-				}
-			}
-		}
-
-		Loop();
-		Render();
-
-		//SDL_Delay(0.1); // Breath
-	}
-
-	Cleanup();
-
-	return 1;
-}
 
 //==============================================================================
 SDL_Renderer* CApp::GetRenderer() 

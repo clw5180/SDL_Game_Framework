@@ -31,13 +31,13 @@ class Texture {
 
 		bool Load(SDL_Renderer* Renderer, std::string Filename);
 
-		void Render(int X, int Y);
+		void Render(int X, int Y, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-		void Render(int X, int Y, int Width, int Height);
+		void Render(int X, int Y, int Width, int Height, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-		void Render(int X, int Y, int Width, int Height, int SX, int SY, int SWidth, int SHeight);
+		void Render(int X, int Y, int Width, int Height, int SX, int SY, int SWidth, int SHeight, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-		void Render(int X, int Y, int SX, int SY, int SWidth, int SHeight);
+		void RenderEx(int X, int Y, int SX, int SY, int SWidth, int SHeight, double _angle = 0, const SDL_Point* _alpha = 0, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 		int GetWidth();
 		int GetHeight();

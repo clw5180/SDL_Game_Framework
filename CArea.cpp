@@ -35,14 +35,17 @@ bool CArea::OnLoad(const char File[])
 
 	fscanf(FileHandle, "%d\n", &AreaSize);
 
-	for (int X = 0; X < AreaSize; X++) {
-		for (int Y = 0; Y < AreaSize; Y++) {
+	for (int X = 0; X < AreaSize; X++) 
+	{
+		for (int Y = 0; Y < AreaSize; Y++) 
+		{
 			char MapFile[255];
 
 			fscanf(FileHandle, "%s ", MapFile);
 
 			CMap tempMap;
-			if (tempMap.OnLoad(MapFile) == false) {
+			if (tempMap.OnLoad(MapFile) == false) 
+			{
 				fclose(FileHandle);
 
 				return false;
@@ -68,7 +71,8 @@ void CArea::OnRender(int CameraX, int CameraY)
 	int FirstID = -CameraX / MapWidth;
 	FirstID = FirstID + ((-CameraY / MapHeight) * AreaSize);
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++)
+	{
 		int ID = FirstID + ((i / 2) * AreaSize) + (i % 2);
 
 		if (ID < 0 || ID >= MapList.size()) continue;
@@ -80,7 +84,8 @@ void CArea::OnRender(int CameraX, int CameraY)
 	}
 }
 
-void CArea::OnCleanup() {
+void CArea::OnCleanup() 
+{
 	//if (Surf_Tileset) {
 	//	SDL_FreeSurface(Surf_Tileset);
 	//}

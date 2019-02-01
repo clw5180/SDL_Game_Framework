@@ -58,7 +58,7 @@ void CMap::OnRender(int MapX, int MapY)
 			int TilesetX = (TileList[ID].TileID % TilesetWidth) * TILE_SIZE;
 			int TilesetY = (TileList[ID].TileID / TilesetWidth) * TILE_SIZE;
 
-			Tex_Tileset->Render(tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
+			Tex_Tileset->RenderEx(tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
 
 			//CSurface::OnDraw(Surf_Display, Surf_Tileset, tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
 
