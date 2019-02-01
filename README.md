@@ -14,5 +14,3 @@
 
 ### 3、效果演示
 ![这里随便写文字](https://github.com/clw5180/SDL_Game_Framework/blob/master/example1.png)
-
-![这里随便写文字](https://github.com/clw5180/SDL_Game_Framework/blob/master/example2.png)
