@@ -1,8 +1,8 @@
 //==============================================================================
-#include "Stringify.h"
+#include "stringify.h"
 
 //==============================================================================
-std::string Stringify::Int(int x) {
+std::string CStringify::Int(int x) {
     std::ostringstream o;
 
     o << x;
@@ -11,14 +11,14 @@ std::string Stringify::Int(int x) {
 }
 
 //------------------------------------------------------------------------------
-std::string Stringify::Char(char* x) {
+std::string CStringify::Char(char* x) {
     std::string o = x;
 
     return o;
 }
 
 //------------------------------------------------------------------------------
-std::string Stringify::Float(float x) {
+std::string CStringify::Float(float x) {
     std::ostringstream o;
 
     o << x;
@@ -27,7 +27,7 @@ std::string Stringify::Float(float x) {
 }
 
 //------------------------------------------------------------------------------
-std::string Stringify::Double(double x) {
+std::string CStringify::Double(double x) {
     std::ostringstream o;
 
     o << x;
@@ -36,7 +36,7 @@ std::string Stringify::Double(double x) {
 }
 
 //==============================================================================
-int Stringify::ToInt(const std::string& String) {
+int CStringify::ToInt(const std::string& String) {
 	if(String == "") return 0;
 
 	int X;
@@ -48,7 +48,7 @@ int Stringify::ToInt(const std::string& String) {
 }
 
 //------------------------------------------------------------------------------
-float Stringify::ToFloat(const std::string& String) {
+float CStringify::ToFloat(const std::string& String) {
 	if(String == "") return 0;
 
 	float X;
@@ -60,7 +60,7 @@ float Stringify::ToFloat(const std::string& String) {
 }
 
 //------------------------------------------------------------------------------
-double Stringify::ToDouble(const std::string& String) {
+double CStringify::ToDouble(const std::string& String) {
 	if(String == "") return 0;
 
 	double X;
@@ -73,7 +73,7 @@ double Stringify::ToDouble(const std::string& String) {
 
 //==============================================================================
 //http://www.infernodevelopment.com/perfect-c-string-explode-split
-std::vector<std::string> Stringify::Explode(std::string str, const std::string& separator) {
+std::vector<std::string> CStringify::Explode(std::string str, const std::string& separator) {
     std::vector<std::string> Results;
 
     int found;

@@ -1,11 +1,11 @@
-#include "CArea.h"
-#include "App.h" //clw modify 20190131
+#include "area.h"
+#include "game.h" //clw modify 20190131
 
 CArea CArea::AreaControl;
 
 CArea::CArea() 
 {
-	Tex_Tileset = new Texture(); //clw modify 20190131
+	Tex_Tileset = new CTexture(); //clw modify 20190131
 	AreaSize = 0;
 }
 
@@ -26,7 +26,7 @@ bool CArea::OnLoad(const char File[])
 
 	if (Tex_Tileset == NULL)
 		return false;
-	if (Tex_Tileset->Load(CApp::GetInstance()->GetRenderer(), strTilesetFile) == false)
+	if (Tex_Tileset->Load(CGame::GetInstance()->GetRenderer(), strTilesetFile) == false)
 	{
 		fclose(FileHandle);
 
@@ -51,7 +51,7 @@ bool CArea::OnLoad(const char File[])
 				return false;
 			}
 
-			tempMap.Tex_Tileset = Tex_Tileset; //clw note：这里会copy过来，所以只用new这里的Tex_Tileset就可以了。
+			tempMap.SetTextureTileset(Tex_Tileset); //clw note：这里会copy过来，所以只用new这里的Tex_Tileset就可以了。
 
 			MapList.push_back(tempMap);
 		}
@@ -68,14 +68,15 @@ void CArea::OnRender(int CameraX, int CameraY)
 	int MapWidth = MAP_WIDTH * TILE_SIZE;
 	int MapHeight = MAP_HEIGHT * TILE_SIZE;
 
-	int FirstID = -CameraX / MapWidth;
-	FirstID = FirstID + ((-CameraY / MapHeight) * AreaSize);
+	int FirstID = -CameraX / MapWidth; //比如-700 / 640 = 1
+	FirstID = FirstID + ((-CameraY / MapHeight) * AreaSize); //clw note:Areasize是从1.area文件中传进来的，比如3*3的maps，则Areasize=3；所以FirstID=1+3=4
 
 	for (int i = 0; i < 4; i++)
 	{
 		int ID = FirstID + ((i / 2) * AreaSize) + (i % 2);
 
-		if (ID < 0 || ID >= MapList.size()) continue;
+		if (ID < 0 || ID >= MapList.size()) 
+			continue;
 
 		int X = ((ID % AreaSize) * MapWidth) + CameraX;
 		int Y = ((ID / AreaSize) * MapHeight) + CameraY;

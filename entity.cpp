@@ -1,13 +1,13 @@
 #include "entity.h"
-#include "App.h"
-#include "Log.h"
-#include "InputHandler.h"
+#include "game.h"
+#include "log.h"
+#include "inputhandler.h"
 
 std::vector<CEntity*> CEntity::EntityList;
 
 CEntity::CEntity() 
 {
-	Tex_Entity = new Texture();
+	Tex_Entity = new CTexture();
 
 	X = Y = 0;
 
@@ -26,16 +26,16 @@ bool CEntity::OnLoad(std::string File, int Width, int Height, int MaxFrames)
 	if (Tex_Entity == NULL)
 		return false;
 
-	if (Tex_Entity->Load(CApp::GetInstance()->GetRenderer(), File) == false)
+	if (Tex_Entity->Load(CGame::GetInstance()->GetRenderer(), File) == false)
 	{
-		Log("Unable to Load Texture!");
+		Log("Unable to Load CTexture!");
 		return false;
 	}
 
 	this->Width = Width;
 	this->Height = Height;
 
-	Anim_Control.MaxFrames = MaxFrames;
+	Anim_Control.SetMaxFrames(MaxFrames);
 
 	return true;
 }
@@ -48,12 +48,12 @@ void CEntity::Update()
 	//reset velocity£¬ºÜÖØÒª
 	m_velocity.setX(0);
 
-	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT))
+	if (CInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT))
 	{
 		m_velocity.setX(1);
 		m_flip = SDL_FLIP_NONE;
 	}
-	else if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT))
+	else if (CInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT))
 	{
 		m_velocity.setX(-1);
 		m_flip = SDL_FLIP_HORIZONTAL;

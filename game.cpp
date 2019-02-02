@@ -1,25 +1,21 @@
 //==============================================================================
-#include "App.h"
-#include "Log.h"
-
+#include "game.h"
+#include "log.h"
 #include <vector>
-#include "FileManager.h"
-
-#include "Define.h"
-
-#include "CArea.h"
-#include "CCamera.h"
-
-#include "InputHandler.h"
+#include "filemanager.h"
+#include "define.h"
+#include "area.h"
+#include "camera.h"
+#include "inputhandler.h"
 
 const int FPS = 60;
 const int DELAY_TIME = 1000.0f / FPS;
 
 //==============================================================================
-CApp* CApp::s_pInstance = NULL;
+CGame* CGame::s_pInstance = NULL;
 
 //------------------------------------------------------------------------------
-int CApp::Execute(int argc, char* argv[])
+int CGame::Execute(int argc, char* argv[])
 {
 	Uint32 frameStart, frameTime;
 
@@ -51,13 +47,13 @@ int CApp::Execute(int argc, char* argv[])
 
 
 //------------------------------------------------------------------------------
-void CApp::HandleEvents() 
+void CGame::HandleEvents() 
 {
 	TheInputHandler::Instance()->update();
 }
 
 //------------------------------------------------------------------------------
-bool CApp::Init() 
+bool CGame::Init() 
 {
 	if(SDL_Init(SDL_INIT_VIDEO) < 0) 
 	{
@@ -94,11 +90,15 @@ bool CApp::Init()
 		return false;
 	}
 
-	//Load all of our Textures (see TextureBank class for expected folder)
-	//clw note：TextureBank::Init()初始化的时候加载某个文件夹内所有图片，详见内部实现
-	if(TextureBank::Init() == false)   //clw note:只有CApp::GetInstance()->GetRenderer()失败才会返回false，基本不可能
+	//Load all of our Textures (see CTextureBank class for expected folder)
+	//clw note：CTextureBank::Init()初始化的时候加载某个文件夹内所有图片，详见内部实现
+	//只有CGame::GetInstance()->GetRenderer()失败才会返回false，基本不可能
+	//如果失败会报错，类似如下：
+	//FindFirstFile failed (3)
+	//Unable to open directory : E:\Projects\SDL_engine_test / data
+	if(CTextureBank::Init() == false)   
 	{
-		Log("Unable to init TextureBank");
+		Log("Unable to init CTextureBank");
 		return false;
 	}
 
@@ -108,19 +108,20 @@ bool CApp::Init()
 		return false;
 	if (Entity2.OnLoad("./entity2.bmp", 64, 64, 8) == false)
 		return false;
-	if (myTexture.Load(CApp::GetInstance()->GetRenderer(), "./3.png") == false)
+	if (myTexture.Load(CGame::GetInstance()->GetRenderer(), "./3.png") == false)
 		return false;
 	
-	Entity1.X = WWIDTH / 2 - 40;
-	Entity1.Y = (WHEIGHT - 64) / 2;
-	Entity2.X = WWIDTH / 2 + 40;
-	Entity2.Y = (WHEIGHT - 64) / 2;
+	Entity1.SetX(WWIDTH / 2 - 40);
+	Entity1.SetY((WHEIGHT - 64) / 2);
+	Entity2.SetX(WWIDTH / 2 + 40);
+	Entity2.SetY((WHEIGHT - 64) / 2);
 
-	CEntity::EntityList.push_back(&Entity1);
-	CEntity::EntityList.push_back(&Entity2);
+	//clw note：注意GetEntityList务必返回引用类型，具体解释详见GetEntityList方法的声明处
+	CEntity::GetEntityList().push_back(&Entity1);
+	CEntity::GetEntityList().push_back(&Entity2);
 	/*********************************************************/
 
-	if (CArea::AreaControl.OnLoad("./maps/1.area") == false) 
+	if (CArea::GetAreaControl().OnLoad("./maps/1.area") == false) 
 	{
 		return false;
 	}
@@ -129,58 +130,64 @@ bool CApp::Init()
 }
 
 //------------------------------------------------------------------------------
-void CApp::Render() 
+void CGame::Render() 
 {
 	SDL_RenderClear(Renderer);
 
-	//Texture* pMyTexture = TextureBank::Get("1");  
+	//CTexture* pMyTexture = CTextureBank::Get("1");  
 	// 自注：Get的参数ID一定要在TexList中有才可以，should really check your pointers
 
+	//clw note，观察一下相机的移动
+	//static int tempX = 0;
+	//static int tempY = 0;
+	//CCamera::CameraControl.SetTarget(&tempX, &tempY);
+	//tempX++;
+	//tempY++;
 
+	CArea::GetAreaControl().OnRender(CCamera::GetCameraControl().GetX(), CCamera::GetCameraControl().GetY());
+	
 
-	//CArea::AreaControl.OnRender(CCamera::CameraControl.GetX(), CCamera::CameraControl.GetY());
+	//myTexture.Render(CCamera::CameraControl.GetX(), CCamera::CameraControl.GetY());
 
-	myTexture.Render(CCamera::CameraControl.GetX(), CCamera::CameraControl.GetY());
-
-	for (int i = 0; i < CEntity::EntityList.size(); i++)
+	for (int i = 0; i < CEntity::GetEntityList().size(); i++)
 	{
-		if (!CEntity::EntityList[i])
+		if (!CEntity::GetEntityList()[i])
 			continue;
-		CEntity::EntityList[i]->OnRender();
+		CEntity::GetEntityList()[i]->OnRender();
 	}
 
 	SDL_RenderPresent(Renderer);
 }
 
 // Update made by clw
-void CApp::Update()
+void CGame::Update()
 {
-	for (int i = 0; i < CEntity::EntityList.size(); i++)
+	for (int i = 0; i < CEntity::GetEntityList().size(); i++)
 	{
-		if (!CEntity::EntityList[i])
+		if (!CEntity::GetEntityList()[i])
 			continue;
-		CEntity::EntityList[i]->Update();
+		CEntity::GetEntityList()[i]->Update();
 	}
 
-	CCamera::CameraControl.Update();
+	CCamera::GetCameraControl().Update();
 }
 
 //------------------------------------------------------------------------------
-void CApp::Cleanup() 
+void CGame::Cleanup() 
 {
 
-	for (int i = 0; i < CEntity::EntityList.size(); i++) 
+	for (int i = 0; i < CEntity::GetEntityList().size(); i++) 
 	{
-		if (!CEntity::EntityList[i]) 
+		if (!CEntity::GetEntityList()[i])
 			continue;
-		CEntity::EntityList[i]->OnCleanup();
+		CEntity::GetEntityList()[i]->OnCleanup();
 	}
-	CEntity::EntityList.clear();
+	CEntity::GetEntityList().clear();
 
 
-	CArea::AreaControl.OnCleanup();
+	CArea::GetAreaControl().OnCleanup();
 
-	TextureBank::Cleanup();
+	CTextureBank::Cleanup();
 
 	if(Renderer) 
 	{
@@ -200,14 +207,14 @@ void CApp::Cleanup()
 
 
 //==============================================================================
-SDL_Renderer* CApp::GetRenderer() 
+SDL_Renderer* CGame::GetRenderer() 
 { 
 	return Renderer; 
 }
 
 //==============================================================================
 
-int CApp::GetWindowWidth()  { return WWIDTH; }
-int CApp::GetWindowHeight() { return WWIDTH; }
+int CGame::GetWindowWidth()  { return WWIDTH; }
+int CGame::GetWindowHeight() { return WWIDTH; }
 
 //==============================================================================

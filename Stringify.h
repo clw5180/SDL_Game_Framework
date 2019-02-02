@@ -1,32 +1,24 @@
-//==============================================================================
-/*
-	Utility class for converting to and from strings
-
-	3/18/2014
-    SDLTutorials.com
-    Tim Jones
-*/
-//==============================================================================
-#ifndef _STRINGIFY_H_
-    #define _STRINGIFY_H_
+#ifndef __STRINGIFY_H__
+#define __STRINGIFY_H__
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-class Stringify {
-	public:
-		static std::string Int(int x);
-		static std::string Char(char* x);
-		static std::string Float(float x);
-		static std::string Double(double x);
+class CStringify
+{
+public:
+	static std::string Int(int x);
+	static std::string Char(char* x);
+	static std::string Float(float x);
+	static std::string Double(double x);
 
-		static int ToInt(const std::string& String);
-		static float ToFloat(const std::string& String);
-		static double ToDouble(const std::string& String);
+	static int ToInt(const std::string& String);
+	static float ToFloat(const std::string& String);
+	static double ToDouble(const std::string& String);
 
-		static std::vector<std::string> Explode(std::string str, const std::string& separator);
+	static std::vector<std::string> Explode(std::string str, const std::string& separator);
 };
 
 #endif

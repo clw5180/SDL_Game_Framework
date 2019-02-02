@@ -1,33 +1,24 @@
-//==============================================================================
-/*
-	Primary application class
-
-	3/11/2014
-	SDLTutorials.com
-	Tim Jones
-*/
-//==============================================================================
-#ifndef __APP_H__
-#define __APP_H__
+#ifndef __CLW_GAME_H__
+#define __CLW_GAME_H__
 
 #include <SDL.h>
 
-#include "TextureBank.h"
+#include "texturebank.h"
 
 #include "entity.h"
 
-class CApp
+class CGame
 {
 public:
 	int Execute(int argc, char* argv[]);
 
 	SDL_Renderer* GetRenderer();
 
-	static CApp* GetInstance()
+	static CGame* GetInstance()
 	{
 		if (s_pInstance == NULL)
 		{
-			s_pInstance = new CApp();
+			s_pInstance = new CGame();
 		}
 		return s_pInstance;
 	}
@@ -40,8 +31,8 @@ public:
 	void Quit() { m_bRunning = false; }
 
 private:
-	static CApp* s_pInstance;
-	CApp() {}
+	static CGame* s_pInstance;
+	CGame() {}
 
 	bool m_bRunning = true;
 
@@ -52,16 +43,17 @@ private:
 	//static const int WindowWidth = 512;  //clw note：写成静态常量成员，不如在一个.h头文件中define
 	//static const int WindowHeight = 384;
 
-	Texture* TestTexture;
+	CTexture* TestTexture;
 
 	CEntity Entity1;
 	CEntity Entity2;
-	Texture myTexture;
+	CTexture myTexture;
+
 
 	// Capture SDL Events
 	void HandleEvents();
 
-	// Initialize our SDL game / app
+	// Initialize our SDL game
 	bool Init();
 
 	// Update made by clw
@@ -70,12 +62,8 @@ private:
 	// Render loop (draw)
 	void Render();
 
-
 	// Free up resources
 	void Cleanup();
-
-
 };
-
 
 #endif

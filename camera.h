@@ -1,12 +1,12 @@
-#ifndef _CCAMERA_H_
-#define _CCAMERA_H_
+#ifndef __AMERA_H__
+#define __AMERA_H__
 
 #include <SDL.h>
+#include "define.h"
+#include "vector2D.h"
 
-#include "Define.h"
-#include "Vector2D.h"
-
-enum {
+enum 
+{
 	TARGET_MODE_NORMAL = 0,
 	TARGET_MODE_CENTER
 };
@@ -14,11 +14,9 @@ enum {
 class CCamera 
 {
 public:
-	static CCamera CameraControl;
-
-	int TargetMode;
-
 	CCamera();
+
+	static CCamera& GetCameraControl() { return CameraControl; }
 
 	//void OnMove(int MoveX, int MoveY);
 	void SetVelocity(int velocityX, int velocityY);
@@ -41,6 +39,10 @@ private:
 
 	int* TargetX;
 	int* TargetY;
+
+	int TargetMode;
+
+	static CCamera CameraControl;
 };
 
 #endif

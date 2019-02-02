@@ -1,19 +1,10 @@
-//
-//  InputHandler.h
-//  SDL Game Programming Book
-//
-//  Created by shaun mitchell on 24/01/2013.
-//  Copyright (c) 2013 shaun mitchell. All rights reserved.
-//
-
-#ifndef __CLW_InputHandler_H__
-#define __CLW_InputHandler_H__
+#ifndef __CLW_INPUTHANDLER_H__
+#define __CLW_INPUTHANDLER_H__
 
 #include <iostream>
 #include <vector>
-
 #include "SDL.h"
-#include "Vector2D.h"
+#include "vector2D.h"
 
 enum mouse_buttons
 {
@@ -22,15 +13,15 @@ enum mouse_buttons
     RIGHT = 2
 };
 
-class InputHandler
+class CInputHandler
 {
 public:
     
-    static InputHandler* Instance()
+    static CInputHandler* Instance()
     {
         if(s_pInstance == 0)
         {
-            s_pInstance = new InputHandler();
+            s_pInstance = new CInputHandler();
         }
         
         return s_pInstance;
@@ -60,11 +51,11 @@ public:
     
 private:
     
-    InputHandler();
-    ~InputHandler();
+    CInputHandler();
+    ~CInputHandler();
     
-    InputHandler(const InputHandler&);
-	InputHandler& operator=(const InputHandler&);
+    CInputHandler(const CInputHandler&);
+	CInputHandler& operator=(const CInputHandler&);
     
     // private functions to handle different event types
     
@@ -99,9 +90,10 @@ private:
     Vector2D* m_mousePosition;
     
     // singleton
-    static InputHandler* s_pInstance;
+    static CInputHandler* s_pInstance;
 };
-typedef InputHandler TheInputHandler;
+
+typedef CInputHandler TheInputHandler;
 
 
-#endif /* defined(__SDL_Game_Programming_Book__InputHandler__) */
+#endif /* defined(__CLW_InputHandler_H__) */

@@ -1,13 +1,13 @@
 //==============================================================================
-#include "Texture.h"
-#include "Log.h"
+#include "texture.h"
+#include "log.h"
 
 //==============================================================================
-Texture::Texture() {
+CTexture::CTexture() {
 }
 
 //------------------------------------------------------------------------------
-Texture::~Texture() 
+CTexture::~CTexture() 
 {
 	if(SDLTexture) 
 	{
@@ -17,7 +17,7 @@ Texture::~Texture()
 }
 
 //==============================================================================
-bool Texture::Load(SDL_Renderer* Renderer, std::string Filename) 
+bool CTexture::Load(SDL_Renderer* Renderer, std::string Filename) 
 {
 	if(Renderer == NULL) 
 	{
@@ -47,27 +47,27 @@ bool Texture::Load(SDL_Renderer* Renderer, std::string Filename)
 	// Convert SDL surface to a texture
 	if ((SDLTexture = SDL_CreateTextureFromSurface(Renderer, TempSurface)) == NULL)
 	{
-		Log("Unable to create SDL Texture : %s : %s", Filename.c_str(), IMG_GetError());
+		Log("Unable to create SDL CTexture : %s : %s", Filename.c_str(), IMG_GetError());
 		return false;
 	}
 	
     // Grab dimensions
 	SDL_QueryTexture(SDLTexture, NULL, NULL, &Width, &Height);
 
-	//Log("Texture Dimensions: %s : %d %d", Filename.c_str(), Width, Height);
+	//Log("CTexture Dimensions: %s : %d %d", Filename.c_str(), Width, Height);
 
 	SDL_FreeSurface(TempSurface);
 	return true;
 }
 
 //------------------------------------------------------------------------------
-void Texture::Render(int X, int Y, SDL_RendererFlip flip)
+void CTexture::Render(int X, int Y, SDL_RendererFlip flip)
 {
 	Render(X, Y, Width, Height, flip);
 }
 
 //------------------------------------------------------------------------------
-void Texture::Render(int X, int Y, int Width, int Height, SDL_RendererFlip flip)
+void CTexture::Render(int X, int Y, int Width, int Height, SDL_RendererFlip flip)
 {
 	SDL_Rect Destination = {X, Y, Width, Height};
 
@@ -75,7 +75,7 @@ void Texture::Render(int X, int Y, int Width, int Height, SDL_RendererFlip flip)
 }
 
 //------------------------------------------------------------------------------
-void Texture::Render(int X, int Y, int Width, int Height, int SX, int SY, int SWidth, int SHeight, SDL_RendererFlip flip)
+void CTexture::Render(int X, int Y, int Width, int Height, int SX, int SY, int SWidth, int SHeight, SDL_RendererFlip flip)
 {
 	SDL_Rect Source = {SX, SY, SWidth, SHeight};
 	SDL_Rect Destination = {X, Y, Width, Height};
@@ -83,7 +83,7 @@ void Texture::Render(int X, int Y, int Width, int Height, int SX, int SY, int SW
 	SDL_RenderCopyEx(Renderer, SDLTexture, &Source, &Destination, 0, 0, flip);
 }
 
-void Texture::RenderEx(int X, int Y, int SX, int SY, int SWidth, int SHeight, double _angle, const SDL_Point* _alpha, SDL_RendererFlip flip )
+void CTexture::RenderEx(int X, int Y, int SX, int SY, int SWidth, int SHeight, double _angle, const SDL_Point* _alpha, SDL_RendererFlip flip )
 {
 	SDL_Rect Source = { SX, SY, SWidth, SHeight };
 	SDL_Rect Destination;
@@ -97,7 +97,7 @@ void Texture::RenderEx(int X, int Y, int SX, int SY, int SWidth, int SHeight, do
 
 
 //------------------------------------------------------------------------------
-int Texture::GetWidth()  { return Width;  }
-int Texture::GetHeight() { return Height; }
+int CTexture::GetWidth()  { return Width;  }
+int CTexture::GetHeight() { return Height; }
 
 //==============================================================================

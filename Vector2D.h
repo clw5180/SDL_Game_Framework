@@ -1,13 +1,5 @@
-//
-//  Vector2D.h
-//  SDL Game Programming Book
-//
-//  Created by shaun mitchell on 27/01/2013.
-//  Copyright (c) 2013 shaun mitchell. All rights reserved.
-//
-
-#ifndef __SDL_Game_Programming_Book__Vector2D__
-#define __SDL_Game_Programming_Book__Vector2D__
+#ifndef __CLW_Vector2D_H__
+#define __CLW_Vector2D_H__
 
 #include <iostream>
 #include <math.h>
@@ -100,4 +92,4 @@ public:
 	int m_y;
 };
 
-#endif /* defined(__SDL_Game_Programming_Book__Vector2D__) */
+#endif /* defined(__CLW_Vector2D_H__) */

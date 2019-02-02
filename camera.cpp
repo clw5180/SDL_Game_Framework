@@ -1,5 +1,5 @@
-#include "CCamera.h"
-#include "InputHandler.h"
+#include "camera.h"
+#include "inputhandler.h"
 
 CCamera CCamera::CameraControl;
 

@@ -1,11 +1,11 @@
 //=============================================================================
-#include "FileManager.h"
-#include "Log.h"
-#include "Stringify.h"
+#include "filemanager.h"
+#include "log.h"
+#include "stringify.h"
 
 #ifdef _WIN32
 #include <direct.h>  //clw note:for getcwd()
-#include <windows.h>  //clw note:for 自定义的dirent.h，已搬到FileManager.h中
+#include <windows.h>  //clw note:for 自定义的dirent.h，已搬到filemanager.h中
 //#include "dirent.h"
 #else
 #include <sys/param.h>
@@ -17,7 +17,7 @@
 #define MAXPATHLEN 260 //clw modify 20190131:From microsoft
 
 //=============================================================================
-bool FileManager::SetContents(std::string Filename, std::string Content, bool Relative) 
+bool CFileManager::SetContents(std::string Filename, std::string Content, bool Relative) 
 {
 	if(Filename == "") return false;
 
@@ -35,7 +35,7 @@ bool FileManager::SetContents(std::string Filename, std::string Content, bool Re
 }
 
 //-----------------------------------------------------------------------------
-std::string FileManager::GetContents(std::string Filename, bool Relative) {
+std::string CFileManager::GetContents(std::string Filename, bool Relative) {
 	if(Filename == "") return "";
 
 	if(Relative) Filename = GetCWD() + DIR_SEPARATOR + Filename;
@@ -61,7 +61,7 @@ std::string FileManager::GetContents(std::string Filename, bool Relative) {
 }
 
 //-----------------------------------------------------------------------------
-std::vector<std::string> FileManager::GetFilesInFolder(std::string Folder) 
+std::vector<std::string> CFileManager::GetFilesInFolder(std::string Folder) 
 {
 	std::vector<std::string> List;
 
@@ -110,7 +110,7 @@ std::vector<std::string> FileManager::GetFilesInFolder(std::string Folder)
 }
 
 //-----------------------------------------------------------------------------
-std::string FileManager::GetCWD() {
+std::string CFileManager::GetCWD() {
 	std::string CWD;
 
 	#ifdef __APPLE__
@@ -125,20 +125,20 @@ std::string FileManager::GetCWD() {
 }
 
 //-----------------------------------------------------------------------------
-std::string FileManager::GetFilenameWithoutExt(std::string Filename) {
-	std::vector<std::string> Parts = Stringify::Explode(Filename, DIR_SEPARATOR);
+std::string CFileManager::GetFilenameWithoutExt(std::string Filename) {
+	std::vector<std::string> Parts = CStringify::Explode(Filename, DIR_SEPARATOR);
 	std::string NewFilename = Parts[Parts.size() - 1];
 
 	// To Do: Filename could potentially have one or more dots
-	Parts		= Stringify::Explode(NewFilename, ".");
+	Parts		= CStringify::Explode(NewFilename, ".");
 	NewFilename	= Parts[0];
 
 	return NewFilename;
 }
 
 //-----------------------------------------------------------------------------
-std::string FileManager::GetFilenameExt(std::string Filename) {
-	std::vector<std::string> Parts = Stringify::Explode(Filename, ".");
+std::string CFileManager::GetFilenameExt(std::string Filename) {
+	std::vector<std::string> Parts = CStringify::Explode(Filename, ".");
 
 	return (Parts.size() <= 1 ? "" : Parts[Parts.size() - 1]);
 }

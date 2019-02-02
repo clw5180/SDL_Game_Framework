@@ -1,5 +1,5 @@
-#ifndef _CANIMATION_H_
-#define _CANIMATION_H_
+#ifndef __ANIMATION_H__
+#define __ANIMATION_H__
 
 #include <SDL.h>
 
@@ -10,21 +10,30 @@ public:
 
 	void OnAnimate();
 
-public:
-	void SetFrameRate(int Rate);
+	void SetFrameRate(int Rate) { FrameRate = Rate; }
 
-	void SetCurrentFrame(int Frame);
+	void SetCurrentFrame(int Frame) { if (Frame < 0 || Frame >= MaxFrames) return;  CurrentFrame = Frame;}
 
-	int GetCurrentFrame();
+	int GetCurrentFrame() { return CurrentFrame; }
 
-public:
+	void SetMaxFrames(int Frame) { if (Frame < 0 ) return; MaxFrames = Frame; }
+
+private:
+	int    CurrentFrame;
+
+	int     FrameInc;
+
+	int     FrameRate; //Milliseconds
+
+	long    OldTime;
+
 	int    MaxFrames;
 
 
 	/*The next interesting tid bit is Oscillate and FrameInc.
-      Not that I wanted to confuse anyone by adding this, but I feel it's necessary for
-      certain things later on. Basically, when the Oscillate flag is true, the animation
-      will increase frames, and then decrease frames. If we had an animation with 10 frames,
+	  Not that I wanted to confuse anyone by adding this, but I feel it's necessary for
+	  certain things later on. Basically, when the Oscillate flag is true, the animation
+	  will increase frames, and then decrease frames. If we had an animation with 10 frames,
 	  it would do something like this:
 
 		  0 1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1 2 ...
@@ -33,17 +42,6 @@ public:
 	  There are some interesting uses for this, but we'll get into that in other lessons.
 	  So how does this work? Take a look at the OnAnimate function. */
 	bool    Oscillate;
-
-
-private:
-	int    CurrentFrame;
-
-	int     FrameInc;
-
-private:
-	int     FrameRate; //Milliseconds
-
-	long    OldTime;
 
 };
 

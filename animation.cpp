@@ -62,19 +62,3 @@ void CAnimation::OnAnimate()
 	}
 }
 
-void CAnimation::SetFrameRate(int Rate) 
-{
-	FrameRate = Rate;
-}
-
-void CAnimation::SetCurrentFrame(int Frame) 
-{
-	if (Frame < 0 || Frame >= MaxFrames) return;
-
-	CurrentFrame = Frame;
-}
-
-int CAnimation::GetCurrentFrame() 
-{
-	return CurrentFrame;
-}

@@ -1,16 +1,5 @@
-//==============================================================================
-/*
-	Class for loading files and reading directories
-
-	Note: To use iOS functions, set your file type to Objective-C++
-
-	3/18/2014
-    SDLTutorials.com
-    Tim Jones
-*/
-//==============================================================================
 #ifndef __FILEMANAGER_H__
-	#define __FILEMANAGER_H__
+#define __FILEMANAGER_H__
 
 #include <string>
 #include <map>
@@ -20,26 +9,28 @@
 
 #define DIR_SEPARATOR "/"
 
-class FileManager {
-	public:
-		static bool SetContents(std::string Filename, std::string Content, bool Relative = true);
+class CFileManager
+{
+public:
+	static bool SetContents(std::string Filename, std::string Content, bool Relative = true);
 
-		static std::string GetContents(std::string Filename, bool Relative = true);
+	static std::string GetContents(std::string Filename, bool Relative = true);
 
-		static std::vector<std::string> GetFilesInFolder(std::string Folder);
+	static std::vector<std::string> GetFilesInFolder(std::string Folder);
 
-		static std::string GetCWD();
+	static std::string GetCWD();
 
-		static std::string GetFilenameWithoutExt(std::string Filename);
+	static std::string GetFilenameWithoutExt(std::string Filename);
 
-		static std::string GetFilenameExt(std::string Filename);
+	static std::string GetFilenameExt(std::string Filename);
 };
 
 /************************************************************************/
 /*  clw modify 20190131
 /************************************************************************/
 // dirent.h
-typedef struct _dirdesc {
+typedef struct _dirdesc 
+{
 	int     dd_fd;      /** file descriptor associated with directory */
 	long    dd_loc;     /** offset in current buffer */
 	long    dd_size;    /** amount of data returned by getdirentries */

@@ -1,37 +1,26 @@
-//==============================================================================
-/*
-	Texture Bank class for loading multiple textures
-
-	3/18/2014
-    SDLTutorials.com
-    Tim Jones
-*/
-//==============================================================================
 #ifndef __TEXTUREBANK_H__
-	#define __TEXTUREBANK_H__
+#define __TEXTUREBANK_H__
 
 #include <map>
 #include <string>
 #include <vector>
+#include "texture.h"
 
-#include "Texture.h"
+class CTextureBank 
+{
+public:
+	static bool Init();
 
-class TextureBank {
-	private:
-		static std::map<std::string, Texture*> TexList;
+	static void Cleanup();
 
-	public:
-		static bool Init();
+	static CTexture* Get(std::string ID);
 
-		static void Cleanup();
+	static CTextureBank* GetInstance();
 
-    private:
-        static void AddTexture(SDL_Renderer* Renderer, std::string ID, std::string Filename);
+private:
+	static void AddTexture(SDL_Renderer* Renderer, std::string ID, std::string Filename);
 
-	public:
-		static Texture* Get(std::string ID);
-
-		static TextureBank* GetInstance();
+	static std::map<std::string, CTexture*> TexList;
 };
 
 #endif

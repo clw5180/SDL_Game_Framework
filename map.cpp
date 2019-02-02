@@ -1,4 +1,4 @@
-#include "CMap.h"
+#include "map.h"
 
 CMap::CMap() 
 {
@@ -22,7 +22,7 @@ bool CMap::OnLoad(char* File)
 		{
 			CTile tempTile;
 
-			fscanf(FileHandle, "%d:%d ", &tempTile.TileID, &tempTile.TypeID);
+			fscanf(FileHandle, "%d:%d ", &tempTile.GetTileID(), &tempTile.GetTypeID());
 
 			TileList.push_back(tempTile);
 		}
@@ -45,9 +45,12 @@ void CMap::OnRender(int MapX, int MapY)
 
 	int ID = 0;
 
-	for (int Y = 0; Y < MAP_HEIGHT; Y++) {
-		for (int X = 0; X < MAP_WIDTH; X++) {
-			if (TileList[ID].TypeID == TILE_TYPE_NONE) {
+	for (int Y = 0; Y < MAP_HEIGHT; Y++) 
+	{
+		for (int X = 0; X < MAP_WIDTH; X++) 
+		{
+			if (TileList[ID].GetTypeID() == TILE_TYPE_NONE) 
+			{
 				ID++;
 				continue;
 			}
@@ -55,8 +58,8 @@ void CMap::OnRender(int MapX, int MapY)
 			int tX = MapX + (X * TILE_SIZE);
 			int tY = MapY + (Y * TILE_SIZE);
 
-			int TilesetX = (TileList[ID].TileID % TilesetWidth) * TILE_SIZE;
-			int TilesetY = (TileList[ID].TileID / TilesetWidth) * TILE_SIZE;
+			int TilesetX = (TileList[ID].GetTileID() % TilesetWidth) * TILE_SIZE;
+			int TilesetY = (TileList[ID].GetTileID() / TilesetWidth) * TILE_SIZE;
 
 			Tex_Tileset->RenderEx(tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
 
