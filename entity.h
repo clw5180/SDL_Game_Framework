@@ -36,10 +36,10 @@ private:
 	
 	int           X;
 	int           Y;
-	int             Width;
-	int             Height;
+	int           Width;
+	int           Height;
 
-	int             AnimState;
+	int           AnimState;
 
 	SDL_RendererFlip     m_flip;
 
@@ -52,3 +52,4 @@ private:
 };
 
 #endif 
+

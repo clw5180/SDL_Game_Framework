@@ -33,7 +33,7 @@ void CCamera::HandleInput()
 	{
 		m_velocity.setY(5);
 	}
-	else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_DOWN) /*&& (m_position.getY() + m_height) < TheGame::Instance()->getGameHeight() - 10*/)
+	else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_DOWN) /*&& (m_position.getY() + m_height) < CGame::Instance()->GetWindowHeight() - 10*/)
 	{
 		m_velocity.setY(-5);
 	}
@@ -41,7 +41,7 @@ void CCamera::HandleInput()
 	{
 		m_velocity.setX(5);
 	}
-	else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT) /*&& (m_position.getX() + m_width) < TheGame::Instance()->getGameWidth()*/)
+	else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT) /*&& (m_position.getX() + m_width) < CGame::Instance()->GetWindowWidth()*/)
 	{
 		m_velocity.setX(-5);
 	}

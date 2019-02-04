@@ -182,7 +182,7 @@ void CInputHandler::update()
         switch (event.type)
         {
             case SDL_QUIT:
-				CGame::GetInstance()->Quit();
+				CGame::Instance()->Quit();
                 break;
                 
             case SDL_JOYAXISMOTION:

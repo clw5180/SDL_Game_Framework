@@ -3,7 +3,7 @@
 #include "log.h"
 #include <vector>
 #include "filemanager.h"
-#include "define.h"
+
 #include "area.h"
 #include "camera.h"
 #include "inputhandler.h"
@@ -74,13 +74,13 @@ bool CGame::Init()
 
 	PrimarySurface = SDL_GetWindowSurface(Window);
 
-	if((Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED)) == NULL) 
+	if((m_pRenderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED)) == NULL) 
 	{
 	    Log("Unable to create renderer");
 	    return false;
 	}
 
-	SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);  //clw note：黑色全0，白色全0xFF
+	SDL_SetRenderDrawColor(m_pRenderer, 0xFF, 0xFF, 0xFF, 0xFF);  //clw note：黑色全0，白色全0xFF
 
 	// Initialize image loading for PNGs
 	//clw note:作用是，如果没有libpng16-16.dll这个dll，这里就会失败，然后就会给出缺少dll的提示；如果没有这个库是不能加载.png文件的，因此这里需要先初始化一下，确保有libpng16-16.dll
@@ -90,15 +90,15 @@ bool CGame::Init()
 		return false;
 	}
 
-	//Load all of our Textures (see CTextureBank class for expected folder)
-	//clw note：CTextureBank::Init()初始化的时候加载某个文件夹内所有图片，详见内部实现
-	//只有CGame::GetInstance()->GetRenderer()失败才会返回false，基本不可能
+	//Load all of our Textures (see CTextureManager class for expected folder)
+	//clw note：CTextureManager::Init()初始化的时候加载某个文件夹内所有图片，详见内部实现
+	//只有CGame::Instance()->GetRenderer()失败才会返回false，基本不可能
 	//如果失败会报错，类似如下：
 	//FindFirstFile failed (3)
 	//Unable to open directory : E:\Projects\SDL_engine_test / data
-	if(CTextureBank::Init() == false)   
+	if(CTextureManager::Init() == false)   
 	{
-		Log("Unable to init CTextureBank");
+		Log("Unable to init CTextureManager");
 		return false;
 	}
 
@@ -108,7 +108,7 @@ bool CGame::Init()
 		return false;
 	if (Entity2.OnLoad("./entity2.bmp", 64, 64, 8) == false)
 		return false;
-	if (myTexture.Load(CGame::GetInstance()->GetRenderer(), "./3.png") == false)
+	if (myTexture.Load(CGame::Instance()->GetRenderer(), "./3.png") == false)
 		return false;
 	
 	Entity1.SetX(WWIDTH / 2 - 40);
@@ -132,9 +132,9 @@ bool CGame::Init()
 //------------------------------------------------------------------------------
 void CGame::Render() 
 {
-	SDL_RenderClear(Renderer);
+	SDL_RenderClear(m_pRenderer);
 
-	//CTexture* pMyTexture = CTextureBank::Get("1");  
+	//CTexture* pMyTexture = CTextureManager::Get("1");  
 	// 自注：Get的参数ID一定要在TexList中有才可以，should really check your pointers
 
 	//clw note，观察一下相机的移动
@@ -156,7 +156,7 @@ void CGame::Render()
 		CEntity::GetEntityList()[i]->OnRender();
 	}
 
-	SDL_RenderPresent(Renderer);
+	SDL_RenderPresent(m_pRenderer);
 }
 
 // Update made by clw
@@ -187,12 +187,12 @@ void CGame::Cleanup()
 
 	CArea::GetAreaControl().OnCleanup();
 
-	CTextureBank::Cleanup();
+	CTextureManager::Cleanup();
 
-	if(Renderer) 
+	if(m_pRenderer) 
 	{
-		SDL_DestroyRenderer(Renderer);
-		Renderer = NULL;
+		SDL_DestroyRenderer(m_pRenderer);
+		m_pRenderer = NULL;
 	}
 
 	if(Window) 
@@ -206,15 +206,3 @@ void CGame::Cleanup()
 }
 
 
-//==============================================================================
-SDL_Renderer* CGame::GetRenderer() 
-{ 
-	return Renderer; 
-}
-
-//==============================================================================
-
-int CGame::GetWindowWidth()  { return WWIDTH; }
-int CGame::GetWindowHeight() { return WWIDTH; }
-
-//==============================================================================

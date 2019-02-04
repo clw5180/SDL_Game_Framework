@@ -2,5 +2,5 @@
 
 int main(int argc, char* argv[]) 
 {
-	return CGame::GetInstance()->Execute(argc, argv);
+	return CGame::Instance()->Execute(argc, argv);
 }

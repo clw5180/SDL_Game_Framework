@@ -26,7 +26,7 @@ bool CEntity::OnLoad(std::string File, int Width, int Height, int MaxFrames)
 	if (Tex_Entity == NULL)
 		return false;
 
-	if (Tex_Entity->Load(CGame::GetInstance()->GetRenderer(), File) == false)
+	if (Tex_Entity->Load(CGame::Instance()->GetRenderer(), File) == false)
 	{
 		Log("Unable to Load CTexture!");
 		return false;

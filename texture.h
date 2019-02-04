@@ -12,7 +12,7 @@ public:
 	CTexture();
 	~CTexture();
 
-	bool Load(SDL_Renderer* Renderer, std::string Filename);
+	bool Load(SDL_Renderer* m_pRenderer, std::string Filename);
 
 	void Render(int X, int Y, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
@@ -31,7 +31,7 @@ private:
 	int Width = 0;
 	int Height = 0;
 
-	SDL_Renderer* Renderer = NULL;
+	SDL_Renderer* m_pRenderer = NULL;
 	SDL_Texture* SDLTexture = NULL;
 };
 

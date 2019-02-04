@@ -26,7 +26,7 @@ bool CArea::OnLoad(const char File[])
 
 	if (Tex_Tileset == NULL)
 		return false;
-	if (Tex_Tileset->Load(CGame::GetInstance()->GetRenderer(), strTilesetFile) == false)
+	if (Tex_Tileset->Load(CGame::Instance()->GetRenderer(), strTilesetFile) == false)
 	{
 		fclose(FileHandle);
 
