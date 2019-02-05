@@ -13,7 +13,7 @@ class CMap
 public:
 	CMap();
 
-	void SetTextureTileset(CTexture* Tileset) { Tex_Tileset = Tileset; }
+	void SetTextureTileset(SDL_Texture* textureTileset) { m_textureTileset = textureTileset; }
 
 	bool OnLoad(char* File);
 
@@ -23,7 +23,9 @@ private:
 	std::vector<CTile> TileList;
 
 	//SDL_Surface* Surf_Tileset;
-	CTexture* Tex_Tileset;
+	//CTexture* Tex_Tileset;
+
+	SDL_Texture* m_textureTileset;
 };
 
 #endif

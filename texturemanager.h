@@ -9,11 +9,11 @@
 class CTextureManager 
 {
 public:
-	static bool Init();
+	bool Init();
 
-	static void Cleanup();
+	void Cleanup();
 
-	static CTexture* Get(std::string ID);
+	CTexture* Get(std::string ID);
 
 	static CTextureManager* Instance()
 	{
@@ -28,6 +28,7 @@ public:
 
 	// load image and text    
 	bool AddImage(SDL_Renderer* Renderer, std::string ID, std::string Filename);//加载图片到TextureManager中  
+	//void AddTexture(SDL_Renderer* m_pRenderer, std::string ID, std::string Filename);
 
 	void clearFromTextureMap(std::string id);
 
@@ -44,11 +45,11 @@ public:
 		return m_textureMap[ID];
 	}
 
-	static void AddTexture(SDL_Renderer* m_pRenderer, std::string ID, std::string Filename);
+	
 
 private:
 	
-	static std::map<std::string, CTexture*> TexList;
+	std::map<std::string, CTexture*> TexList;
 
 	//=========================================================
 	//子程式声明

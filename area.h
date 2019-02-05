@@ -20,7 +20,8 @@ private:
 	int                     AreaSize;
 
 	//SDL_Surface*          Surf_Tileset;
-	CTexture*               Tex_Tileset;
+	SDL_Texture*            m_textureTileset;   //clw modify 20190205
+	//CTexture*               Tex_Tileset;
 
 	static CArea            AreaControl;
 

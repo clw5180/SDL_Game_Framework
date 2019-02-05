@@ -95,21 +95,22 @@ bool CGame::Init()
 	//只有CGame::Instance()->GetRenderer()失败才会返回false，基本不可能
 	//如果失败会报错，类似如下：
 	//FindFirstFile failed (3)
-	//Unable to open directory : E:\Projects\SDL_engine_test / data
-	if(CTextureManager::Init() == false)   
-	{
-		Log("Unable to init CTextureManager");
-		return false;
-	}
+	//Unable to open directory : E:\Projects\SDL_engine_test/res
+	//if(CTextureManager::Instance()->Init() == false)   
+	//{
+	//	Log("Unable to init CTextureManager");
+	//	return false;
+	//}
 
 	/*********************************************************/
 	/* clw modify 20190201:加两个sprite */
-	if (Entity1.OnLoad("./entity1.bmp", 64, 64, 8) == false)
+	if (Entity1.OnLoad("./res/entity1.bmp", 64, 64, 8) == false)
 		return false;
-	if (Entity2.OnLoad("./entity2.bmp", 64, 64, 8) == false)
+	if (Entity2.OnLoad("./res/entity2.bmp", 64, 64, 8) == false)
 		return false;
-	if (myTexture.Load(CGame::Instance()->GetRenderer(), "./3.png") == false)
+	if (myTexture.Load(CGame::Instance()->GetRenderer(), "./res/background.png") == false)
 		return false;
+	//CTextureManager::Instance()->AddImage()
 	
 	Entity1.SetX(WWIDTH / 2 - 40);
 	Entity1.SetY((WHEIGHT - 64) / 2);
@@ -187,7 +188,7 @@ void CGame::Cleanup()
 
 	CArea::GetAreaControl().OnCleanup();
 
-	CTextureManager::Cleanup();
+	CTextureManager::Instance()->Cleanup();
 
 	if(m_pRenderer) 
 	{

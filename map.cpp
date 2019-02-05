@@ -1,9 +1,10 @@
 #include "map.h"
+#include "game.h"
 
 CMap::CMap() 
 {
 	//Surf_Tileset = NULL;
-	Tex_Tileset = NULL;
+	m_textureTileset = NULL;
 }
 
 bool CMap::OnLoad(char* File) 
@@ -37,11 +38,17 @@ bool CMap::OnLoad(char* File)
 void CMap::OnRender(int MapX, int MapY) 
 {
 	//if (Surf_Tileset == NULL) return;
-	if (Tex_Tileset == NULL) 
+	if (m_textureTileset == NULL)
 		return;
 
-	int TilesetWidth = Tex_Tileset->GetWidth() / TILE_SIZE;
-	int TilesetHeight = Tex_Tileset->GetHeight() / TILE_SIZE;
+
+	// Grab dimensions
+	int width;
+	int height;
+    SDL_QueryTexture(m_textureTileset, NULL, NULL, &width, &height);  //clw note：这个需要的时候再查询就行，不用提前查然后存起来
+
+	int TilesetWidth = width / TILE_SIZE;
+	int TilesetHeight = height / TILE_SIZE;
 
 	int ID = 0;
 
@@ -61,7 +68,17 @@ void CMap::OnRender(int MapX, int MapY)
 			int TilesetX = (TileList[ID].GetTileID() % TilesetWidth) * TILE_SIZE;
 			int TilesetY = (TileList[ID].GetTileID() / TilesetWidth) * TILE_SIZE;
 
-			Tex_Tileset->RenderEx(tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
+
+			SDL_Rect Source = { TilesetX, TilesetY, TILE_SIZE, TILE_SIZE };
+			SDL_Rect Destination;
+			Destination.x = tX;
+			Destination.y = tY;
+			Destination.w = TILE_SIZE;  //clw note：注意：这个地方必须得给值，否则就是默认值0，因此屏幕上就什么也没有！！！
+			Destination.h = TILE_SIZE;
+			SDL_RenderCopyEx(CGame::Instance()->GetRenderer(), m_textureTileset, &Source, &Destination, 0, 0, SDL_FLIP_NONE);
+
+
+			//Tex_Tileset->RenderEx(tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
 
 			//CSurface::OnDraw(Surf_Display, Surf_Tileset, tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
 

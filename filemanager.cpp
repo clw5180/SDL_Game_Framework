@@ -65,10 +65,10 @@ std::vector<std::string> CFileManager::GetFilesInFolder(std::string Folder)
 {
 	std::vector<std::string> List;
 
-	std::string CWD  = GetCWD();
-	std::string Path = CWD;
+	std::string Path = GetCWD();
 
-	if(Folder != "") Path += DIR_SEPARATOR + Folder;
+	if(Folder != "") 
+		Path += (DIR_SEPARATOR + Folder);
 
 	#ifdef __APPLE__
 		NSError* Error;
@@ -86,8 +86,10 @@ std::vector<std::string> CFileManager::GetFilesInFolder(std::string Folder)
         dirent* FileHandle = NULL;
 
         // Needs improved
-        if((DirHandle = opendir(Folder.c_str())) != NULL) {
-            while((FileHandle = readdir(DirHandle)) != NULL) {
+        if((DirHandle = opendir(Folder.c_str())) != NULL) 
+		{
+            while((FileHandle = readdir(DirHandle)) != NULL) 
+			{
 				//clw note:在win操作系统，每个文件夹内都有一个看不到的..文件夹
 				//         linux下应该同时有.和..文件夹
                 if(std::string(FileHandle->d_name) == ".")  continue;
@@ -110,7 +112,8 @@ std::vector<std::string> CFileManager::GetFilesInFolder(std::string Folder)
 }
 
 //-----------------------------------------------------------------------------
-std::string CFileManager::GetCWD() {
+std::string CFileManager::GetCWD() 
+{
 	std::string CWD;
 
 	#ifdef __APPLE__

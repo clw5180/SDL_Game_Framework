@@ -1,11 +1,12 @@
 #include "area.h"
 #include "game.h" //clw modify 20190131
+#include "log.h"
 
 CArea CArea::AreaControl;
 
 CArea::CArea() 
 {
-	Tex_Tileset = new CTexture(); //clw modify 20190131
+	//Tex_Tileset = new CTexture(); //clw modify 20190131
 	AreaSize = 0;
 }
 
@@ -21,18 +22,55 @@ bool CArea::OnLoad(const char File[])
 	}
 
 	char TilesetFile[255];
-	fscanf(FileHandle, "%s\n", TilesetFile);
-	std::string strTilesetFile(TilesetFile);
+	fscanf(FileHandle, "%s\n", TilesetFile);  //clw note：TilesetFile形如 ./tilesets/1.png
 
-	if (Tex_Tileset == NULL)
-		return false;
-	if (Tex_Tileset->Load(CGame::Instance()->GetRenderer(), strTilesetFile) == false)
+	/*********************************************/
+	//clw note：注意char*和string之间的转换：
+	//（1）char*类型转为str类型例子：
+	// std::string strTilesetFile(TilesetFile); 
+	//（2）str转char*类型例子：
+	// IMG_Load(strTilesetFile.c_str());
+	/*********************************************/
+
+	SDL_Renderer* m_pRenderer = CGame::Instance()->GetRenderer();
+	if (m_pRenderer == NULL)
 	{
+		Log("Bad SDL renderer passed");
 		fclose(FileHandle);
-
 		return false;
 	}
 
+	SDL_Surface* TempSurface = IMG_Load(TilesetFile);//必须要有libpng16-16.dll这个dll，否则加载.png会失败！
+	//如果是.jpg需要libjpeg-9.dll
+
+	if (TempSurface == NULL)
+	{
+		Log("Unable to load image : %s : %s", TilesetFile, IMG_GetError());
+		fclose(FileHandle);
+		return false;
+	}
+
+	//Color key image
+	SDL_SetColorKey(TempSurface, SDL_TRUE, SDL_MapRGB(TempSurface->format, 0xFF, 0, 0xFF));
+
+	// Convert SDL surface to a texture
+	if ((m_textureTileset = SDL_CreateTextureFromSurface(m_pRenderer, TempSurface)) == NULL)
+	{
+		Log("Unable to create SDL CTexture : %s : %s", TilesetFile, IMG_GetError());
+		fclose(FileHandle);
+		return false;
+	}
+
+	// Grab dimensions
+	//SDL_QueryTexture(m_textureTileset, NULL, NULL, &Width, &Height);  //clw note：这个需要的时候再查询就行，不用提前查然后存起来
+
+	SDL_FreeSurface(TempSurface);
+
+	/*
+	if (Tex_Tileset->Load(CGame::Instance()->GetRenderer(), strTilesetFile) == false)
+	if(CTextureManager::Instance()->AddImage(CGame::Instance()->GetRenderer(), "map" ,strTilesetFile) == false)
+	*/
+	
 	fscanf(FileHandle, "%d\n", &AreaSize);
 
 	for (int X = 0; X < AreaSize; X++) 
@@ -51,7 +89,7 @@ bool CArea::OnLoad(const char File[])
 				return false;
 			}
 
-			tempMap.SetTextureTileset(Tex_Tileset); //clw note：这里会copy过来，所以只用new这里的Tex_Tileset就可以了。
+			tempMap.SetTextureTileset(m_textureTileset); //clw note：这里会copy过来，所以只用new这里的Tex_Tileset就可以了。
 
 			MapList.push_back(tempMap);
 		}
